@@ -20,13 +20,18 @@ def generate_launch_description():
     
     node4 = Node(package='close_loop_controller',
                        executable='close_loop_controller',
-                       name="close_loop_controller',",
+                       name="close_loop_controller",
                        )
+    
+    node5 = Node(package='close_loop_controller',
+                        executable='color_detection',
+                        name="color_detection",
+                        )
     
 
     
     
     
-    l_d = LaunchDescription([node1, node2, node3])
+    l_d = LaunchDescription([node1, node2, node3, node4, node5])
 
     return l_d

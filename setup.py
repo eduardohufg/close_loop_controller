@@ -26,6 +26,7 @@ setup(
             'path_generator = close_loop_controller.path_generator:main',
             'odometry = close_loop_controller.odometry:main',
             'close_loop_controller = close_loop_controller.close_loop_controller:main',
+            'color_detection = close_loop_controller.color_detection:main',
         ],
     },
 )

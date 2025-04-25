@@ -9,7 +9,7 @@ class OdometryClass(Node):
     def __init__(self):
         super().__init__("odometry")
         self.get_logger().info("Robot pose estimation by odometry node.")
-        self.create_timer(0.1, self.odometry_callback)
+        self.create_timer(0.01, self.odometry_callback)
         self.pub = self.create_publisher(Odometry, 'odom', 1)
         self.create_subscription(Float32, 'VelocityEncR', self.wR_cb, qos.qos_profile_sensor_data)
         self.create_subscription(Float32, 'VelocityEncL', self.wL_cb, qos.qos_profile_sensor_data)
@@ -39,8 +39,17 @@ class OdometryClass(Node):
         # Calculate the robot's position and orientation
         v = (self.wR + self.wL)*self.r / 2.0
         w = (self.wR - self.wL)*self.r / self.L
-        self.x += v * math.cos(self.q) * elapsed_time
-        self.y += v * math.sin(self.q) * elapsed_time
+
+
+        if abs(w) > 1e-6:
+            dx = (v / w) * (math.sin(self.q + w * elapsed_time) - math.sin(self.q))
+            dy = (v / w) * (-math.cos(self.q + w * elapsed_time) + math.cos(self.q))
+        else:
+            dx = v * math.cos(self.q) * elapsed_time
+            dy = v * math.sin(self.q) * elapsed_time
+
+        self.x += dx
+        self.y += dy
         self.q += w * elapsed_time
 
         # Create odometry message
